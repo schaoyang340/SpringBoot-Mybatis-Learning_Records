@@ -1202,7 +1202,7 @@ Spring MVC 中默认提供了许多实现了 `HttpMessageConverter` 接口的类
 
 在方法中，首先创建了一个 `UserInfo` 对象，并设置了 `userId` 属性为传入的 `id` 值。然后，创建了一个 `HashMap` 对象，将一些信息放入其中，并将这个 `HashMap` 对象作为方法的返回值返回。
 
-## 数据库相关操作
+# 数据库相关操作
 
 ## 一.JDBC: java链接数据库技术
 
