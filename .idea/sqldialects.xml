@@ -2,5 +2,6 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/9c9f6270-9623-42ca-babb-7b183d488436/console.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mapper/Employees1Mapper.xml" dialect="GenericSQL" />
   </component>
 </project>

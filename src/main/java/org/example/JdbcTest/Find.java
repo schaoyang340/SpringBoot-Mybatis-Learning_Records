@@ -1,4 +1,4 @@
-package org.example.JDBCtest;
+package org.example.JdbcTest;
 
 import java.sql.*;
 

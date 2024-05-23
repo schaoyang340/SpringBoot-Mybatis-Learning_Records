@@ -1,11 +1,10 @@
-package org.example.JDBCtest;
+package org.example.JdbcTest;
 
 import org.example.WebMvc.vo.Employees;
 
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.logging.SimpleFormatter;
 
 public class Add{
     public static void main(String[] args) {

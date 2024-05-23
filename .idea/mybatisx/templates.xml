@@ -6,8 +6,8 @@
         <option name="generateConfig">
           <GenerateConfig>
             <option name="annotationType" value="MYBATIS_PLUS3" />
-            <option name="basePackage" value="generator" />
-            <option name="basePath" value="src/main/java/org/sql" />
+            <option name="basePackage" value="org.sql" />
+            <option name="basePath" value="src/main/java" />
             <option name="classNameStrategy" value="camel" />
             <option name="encoding" value="UTF-8" />
             <option name="extraClassSuffix" value="" />
@@ -69,16 +69,13 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="Departments1" />
-                  <option name="tableName" value="departments1" />
-                </TableUIInfo>
-                <TableUIInfo>
                   <option name="className" value="Employees1" />
                   <option name="tableName" value="employees1" />
                 </TableUIInfo>
               </list>
             </option>
             <option name="templatesName" value="mybatis-plus3" />
+            <option name="useActualColumnAnnotationInject" value="true" />
           </GenerateConfig>
         </option>
         <option name="moduleName" value="springboot_mybatis" />
