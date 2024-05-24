@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sql.dao.Employees1Mapper">
+
+    <resultMap id="BaseResultMap" type="org.sql.domain.Employees1">
+            <id property="employeeId" column="employee_id" jdbcType="INTEGER"/>
+            <result property="firstName" column="first_name" jdbcType="VARCHAR"/>
+            <result property="lastName" column="last_name" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="phoneNumber" column="phone_number" jdbcType="VARCHAR"/>
+            <result property="jobId" column="job_id" jdbcType="VARCHAR"/>
+            <result property="salary" column="salary" jdbcType="DOUBLE"/>
+            <result property="commissionPct" column="commission_pct" jdbcType="DOUBLE"/>
+            <result property="managerId" column="manager_id" jdbcType="INTEGER"/>
+            <result property="departmentId" column="department_id" jdbcType="INTEGER"/>
+            <result property="hiredate" column="hiredate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        e.employee_id,
+        e.first_name,
+        e.last_name,
+        e.email,
+        e.phone_number,
+        e.job_id,
+        e.salary,
+        e.commission_pct,
+        e.manager_id,
+        e.department_id,
+        e.hiredate
+    </sql>
+
+    <select id="listCondition" resultType="org.sql.domain.Employees1">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM employees1 e
+        WHERE e.first_name LIKE CONCAT('%', #{name}, '%')
+    </select>
+
+    <!--动态SQL-->
+    <select id="listCondition2" resultType="org.sql.domain.Employees1">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM employees1 e
+        <where>
+            <if test="name != null || name != ''">
+                and e.first_name like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+</mapper>
