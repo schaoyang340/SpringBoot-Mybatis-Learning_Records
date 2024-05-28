@@ -1685,6 +1685,124 @@ WHERE e.first_name LIKE '%k%'
 
 ![image-20240524235323768](SpringBootNote.assets/image-20240524235323768.png)
 
+可设置参数传递，在SQL映射文件中设置参数`parameterType`，该参数设置参数类型。
+
+![image-20240527094913106](SpringBootNote.assets/image-20240527094913106.png)
+
+然后在Mapper接口，对应的方法内添加@Param注解设置要传递的参数。
+
+![image-20240527094857464](SpringBootNote.assets/image-20240527094857464.png)
+
+#### 2.数据插入
+
+在Mapper接口创建add方法，参数为Employees对象，默认返回int类型，为影响的行数。
+
+```java
+int add(Employees1 employees1);
+```
+
+在SQL映射文件创建相应SQL，在这个SQL中使用了`trim标签`，这个标签可以去除空格，起拼接作用，比如下面的语句
+
+```xml
+<trim prefix="("  suffixOverrides="," suffix=")">
+
+</trim>
+```
+
+对于SQL的插入语句，应该是下面这样的
+
+```sql
+insert into employees1
+    (employee_id, first_name, last_name, email, phone_number, job_id, salary, commission_pct,
+                        manager_id, department_id, hiredate)
+values ();
+```
+
+我们可以注意到前后都有括号，而`prefix`为生成的SQL语句添加前缀，`suffix`为生成的SQL语句添加后缀，`suffixOverrides`为生成的SQL语句末尾去除指定内容，另一个未使用的参数是`prefixOverrides`为生成的SQL语句开头去除指定内容。这样，生成的语句贴合实际使用的SQL语句，这些是为了写动态SQL。
+
+格式如下，通过`if`标签来判断拼接，我们的数据是从Employees1中拿的，所以判断条件中的属性名要跟domain包下的Employees1中的属性名对应，而拼接的内容是动态SQL，所以要跟数据表的字段相对应
+
+![](SpringBootNote.assets/image-20240527113736592.png)
+
+SQL语句中的Values也通过`trim`标签实现，注意这里是从实体类Employees1中取数据，所以使用属性名。
+
+![image-20240527111851933](SpringBootNote.assets/image-20240527111851933.png)
+
+接下来在业务层实现一下add方法。
+
+![image-20240527112635866](SpringBootNote.assets/image-20240527112635866.png)
+
+![image-20240527112649609](SpringBootNote.assets/image-20240527112649609.png)
+
+在持久层处理客户端请求，因为插入方法默认返回影响行数，所以这里的判断条件是大于等于0.
+
+![image-20240527144932596](SpringBootNote.assets/image-20240527144932596.png)
+
+**注意：**在进行添加时，有一个问题，当添加时间属性时出现报错，提示上传参数格式有误。
+
+原因时，MybatisX自动生成的实体类中，没有指定时区和时间格式，我们在全局配置文件`application.properties`中配置如下信息，就可以成功上传。
+
+```properties
+# set global date
+spring.mvc.format.date=yyyy-MM-dd HH:mm:ss
+spring.jackson.time-zone=Asia/Shanghai
+```
+
+但是这样设置后的时间还存在时区信息，我不想要显示时区信息，那么在实体类中的hiredate属性，添加注解如下。
+
+JsonFormat注解确保了JSON数据序列化与反序列化的格式问题。
+
+```java
+@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
+    @TableField(value = "hiredate")
+    private Date hiredate;
+```
+
+#### 3.多表联查
+
+之前的操作都仅对于一个数据表Employees1，那么多表连接该怎么写list？比如下面这个SQL，在java中要怎么写。
+
+```sql
+# 显示员工信息，职位名称，部门名称
+SELECT e.*,j.job_title,d.department_name
+FROM employees1 e
+LEFT JOIN jobs j on e.job_id = j.job_id
+LEFT JOIN departments1 d on d.department_id = e.department_id
+```
+
+首先一个问题，用什么存储这些数据？之前都是使用实体类Employees1存储，Mybatis是ORM框架，对象关系映射，多表查询是多个对象。有多种方法，比如有一个对象就创一个对象但是这种有点麻烦。
+
+对于这些对象我们可以使用Map来存储它们，Map——松散结构类型，没有对象时，完全可以用Map来代替对象。
+
+首先在Mapper接口创建这个方法，key是字段名，对象是对应的值，一个Map就是一行数据。参数也填成了Map类型，因为将有多个参数。
+
+```java
+List<Map<String,Object>> listAll(@Param("parse") Map<String,Object> parse);
+```
+
+接下来去SQL映射文件创建这个方法，结果是List里面的泛型Map类型，查询得到的一行数据，多行数据就自动放到List中。
+
+```xml
+<select id="listAll" parameterType="map" resultType="java.util.Map">
+        
+    </select>
+```
+
+然后把联表查询SQL语句放进来，并进行一些改动，添加条件，这里稍微填写几个条件，比如根据姓名查询，部门名称查询 。
+
+![image-20240528172653830](SpringBootNote.assets/image-20240528172653830.png)
+
+然后和之前一样，在业务层创建方法。持久层处理客户端请求。
+
+
+
+补充：前端接受参数的几种方式：
+
+1. 最基本的：request.getParameter()方法获取
+2. 设置属性：如 String name，name和表单中的元素name一致。
+3. 传递对象：对象中的属性名和表单中的元素的名称一样。（比如实体类Employees1）
+4. Map：多个对象时可使用，名称作为key，对应的属性值作为value。
+
 # 疑问
 
 此处是学习过程中遇到过的疑惑。

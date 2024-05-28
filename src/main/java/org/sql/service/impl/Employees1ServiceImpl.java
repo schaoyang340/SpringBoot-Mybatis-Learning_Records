@@ -8,6 +8,7 @@ import org.sql.dao.Employees1Mapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author SCY12
@@ -26,6 +27,26 @@ public class Employees1ServiceImpl extends ServiceImpl<Employees1Mapper, Employe
     @Override
     public List<Employees1> listCondition2(String name) {
         return baseMapper.listCondition2(name);
+    }
+
+    @Override
+    public int add(Employees1 employees1) {
+        return baseMapper.add(employees1);
+    }
+
+    @Override
+    public List<Map<String, Object>> listAll(Map<String, Object> parse) {
+        return baseMapper.listAll(parse);
+    }
+
+    @Override
+    public boolean update(Employees1 employees1) {
+        return (baseMapper.update(employees1) != -1);
+    }
+
+    @Override
+    public boolean del(Integer employeeId) {
+        return (baseMapper.del(employeeId) != -1);
     }
 }
 

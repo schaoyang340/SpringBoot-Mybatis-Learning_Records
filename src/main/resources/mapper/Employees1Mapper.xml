@@ -32,6 +32,7 @@
         e.hiredate
     </sql>
 
+
     <select id="listCondition" resultType="org.sql.domain.Employees1">
         SELECT
         <include refid="Base_Column_List"/>
@@ -40,7 +41,7 @@
     </select>
 
     <!--动态SQL-->
-    <select id="listCondition2" resultType="org.sql.domain.Employees1">
+    <select id="listCondition2" parameterType="string" resultType="org.sql.domain.Employees1">
         SELECT
         <include refid="Base_Column_List"/>
         FROM employees1 e
@@ -50,4 +51,140 @@
             </if>
         </where>
     </select>
+
+    <insert id="add" parameterType="org.sql.domain.Employees1">
+        INSERT INTO employees1
+            <trim prefix="("  suffixOverrides="," suffix=")">
+                <if test="employeeId != null">
+                    employee_id,
+                </if>
+                <if test="firstName != null">
+                    first_name,
+                </if>
+                <if test="lastName != null">
+                    last_name,
+                </if>
+                <if test="email != null">
+                    email,
+                </if>
+                <if test="phoneNumber != null">
+                    phone_number,
+                </if>
+                <if test="jobId != null">
+                    job_id,
+                </if>
+                <if test="salary != null">
+                    salary,
+                </if>
+                <if test="commissionPct != null">
+                    commission_pct,
+                </if>
+                <if test="managerId != null">
+                    manager_id,
+                </if>
+                <if test="departmentId != null">
+                    department_id,
+                </if>
+                <if test="hiredate != null">
+                    hiredate,
+                </if>
+            </trim>
+        <trim prefix="values(" suffixOverrides="," suffix=")">
+            <if test="employeeId != null">
+                #{employeeId},
+            </if>
+            <if test="firstName != null">
+                #{firstName},
+            </if>
+            <if test="lastName != null">
+                #{lastName},
+            </if>
+            <if test="email != null">
+                #{email},
+            </if>
+            <if test="phoneNumber != null">
+                #{phoneNumber},
+            </if>
+            <if test="jobId != null">
+                #{jobId},
+            </if>
+            <if test="salary != null">
+                #{salary},
+            </if>
+            <if test="commissionPct != null">
+                #{commissionPct},
+            </if>
+            <if test="managerId != null">
+                #{managerId},
+            </if>
+            <if test="departmentId != null">
+                #{departmentId},
+            </if>
+            <if test="hiredate != null">
+                #{hiredate},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="org.sql.domain.Employees1">
+        update employees1
+        <set>
+            <if test="firstName != null">
+                first_name = #{firstName},
+            </if>
+            <if test="lastName != null">
+                last_name = #{lastName},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="phoneNumber != null">
+                phone_number = #{phoneNumber},
+            </if>
+            <if test="jobId != null">
+                job_id = #{jobId},
+            </if>
+            <if test="salary != null">
+                salary = #{salary},
+            </if>
+            <if test="commissionPct != null">
+                commission_pct = #{commissionPct},
+            </if>
+            <if test="managerId != null">
+                manager_id =  #{managerId},
+            </if>
+            <if test="departmentId != null">
+                department_id = #{departmentId},
+            </if>
+            <if test="hiredate != null">
+                hiredate = #{hiredate},
+            </if>
+        </set>
+        where employee_id = #{employeeId}
+    </update>
+
+    <delete id="del" parameterType="integer">
+        delete from employees1 where employee_id = #{id}
+    </delete>
+
+    <!--显示员工信息，职位名称，部门名称-->
+    <select id="listAll" parameterType="map" resultType="java.util.Map">
+        SELECT
+            <include refid="Base_Column_List"/>,j.job_title,d.department_name
+        FROM employees1 e
+        LEFT JOIN jobs j on e.job_id = j.job_id
+        LEFT JOIN departments1 d on d.department_id = e.department_id
+        <where>
+            <if test="ename != null">
+                and concat(e.first_name, e.lanst_name) like concat('%',#{ename},'%')
+            </if>
+            <if test="jobId != null">
+                and j.job_id = #{jobId}
+            </if>
+            <if test="deptId != null">
+                and department_id = #{deptId}
+            </if>
+        </where>
+    </select>
+
 </mapper>
