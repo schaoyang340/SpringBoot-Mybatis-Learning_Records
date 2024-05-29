@@ -1758,7 +1758,128 @@ JsonFormat注解确保了JSON数据序列化与反序列化的格式问题。
     private Date hiredate;
 ```
 
-#### 3.多表联查
+#### 3.数据添加
+
+在Mapper接口创建update方法
+
+```java
+int update(Employees1 employees1);
+```
+
+在业务层创建方法，update语句同insert一样默认返回影响行数，这里创建为布尔类型，是为了让控制层最后的返回值为True或False。
+
+```
+boolean update(Employees1 employees1);
+```
+
+SQL映射文件实现SQL语句，使用`set标签`
+
+![image-20240529104553664](SpringBootNote.assets/image-20240529104553664.png)
+
+控制层处理请求，对方法参数使用@RequestBody注解（一般用于POST，PUT请求），它可以将JSON数据自动转换为Java对象，
+
+![image-20240529104656232](SpringBootNote.assets/image-20240529104656232.png)
+
+#### 4.数据删除
+
+好吧，经典流程。Mapper接口创建方法，SQL映射文件实现SQL语句，业务层创建方法，持久层处理请求。
+
+delete语句的默认返回也是影响的行数，创建的方法和update一样。
+
+在SQL映射文件中，根据empId删除即可
+
+![image-20240529110004860](SpringBootNote.assets/image-20240529110004860.png)
+
+最后的控制层，使用了注解`PathVariable`，`@PathVariable("id")`是Spring MVC中的注解，用于将请求URL中的模板变量（如{id}）映射到方法的参数上。
+
+`@PathVariable("id")`将URL中的名为"id"的模板变量的值映射到方法的`employeeId`参数上。例如，如果请求的URL是`/del/123`，那么"123"这个值将被映射到`employeeId`参数上，方法就可以使用这个值进行操作。
+
+这个注解的作用是方便获取请求URL中的变量值，使得方法能够根据请求的具体情况做出相应的处理。
+
+![image-20240529110101580](SpringBootNote.assets/image-20240529110101580.png)
+
+#### html展示页面
+
+创建在了资源文件resources中的staic包下
+
+emps.html。
+
+```html
+$(function (){
+        listEmp();
+    })
+```
+
+**`$(function() { ... })` 语法**：
+
+- 这是jQuery的简写方式，用于在页面的DOM完全加载并准备好后执行指定的函数。
+- 等效于 `$(document).ready(function() { ... });`。
+- `$(function() { ... });` 会在文档加载完成后立即执行传入的函数。这是为了确保所有的HTML元素都已经加载并可以操作时再执行代码。
+
+**Ajax GET 请求**：
+
+```html
+$.get('employee/list', function (resp) {
+```
+
+`$.get(url, callback)`：这是jQuery的GET请求方法。它向指定的URL发送一个GET请求，并在请求成功时执行回调函数。
+
+`'employee/list'`：请求的URL，表示从服务器的`employee/list`端点获取数据。
+
+`function (resp) { ... }`：这是一个回调函数，当请求成功并接收到响应时执行。`resp`是服务器返回的数据。
+
+**遍历数据并生成HTML：**
+
+```html
+$.each(resp.data, function (index, emp) {
+    str += ` <tr> ... </tr>`;
+});
+```
+
+`$.each(resp.data, function (index, emp) { ... })`：使用jQuery的`$.each`方法遍历`resp.data`数组。`resp.data`是服务器返回的员工数据列表。
+
+`function (index, emp) { ... }`：这是遍历时的回调函数，`index`是当前元素的索引，`emp`是当前的员工对象。
+
+`str += `<tr> ... </tr>`;`：将每个员工的信息生成HTML表格行，并追加到`str`中。
+
+**生成HTML表格行：**
+
+```html
+str += ` <tr>
+            <td>${emp.employee_id}</td>
+            <td>${emp.first_name + ' ' + emp.last_name}</td>
+            <td>${emp.phone_number}</td>
+            <td>${emp.job_title}</td>
+            <td>${emp.salary}</td>
+            <td>${checkUndefined(emp.commission_pct)}</td>
+            <td>${checkUndefined(emp.manager_id)}</td>
+            <td>${emp.department_name}</td>
+            <td>${emp.hiredate}</td>
+            <td>
+                <button type="button" class="btn btn-link">编辑</button>
+                <button type="button" onclick="delEmp(${emp.employee_id})" class="btn btn-link">删除</button>
+            </td>
+        </tr>`;
+
+```
+
+使用模板字符串（``...``）生成HTML代码。
+
+`${emp.property}`：使用模板字符串语法插入员工对象的属性值。
+
+`checkUndefined(emp.property)`：检查属性是否为undefined，如果是，则返回空字符串或其他默认值。
+
+`onclick="delEmp(${emp.employee_id})"`：绑定删除按钮的点击事件，传入员工的`employee_id`作为参数。
+
+**将生成的HTML插入到页面中：**
+
+```html
+$('tbody').html(str);
+```
+
+`$('tbody').html(str);`：将生成的HTML代码插入到页面中`<tbody>`元素内，替换其现有内容。
+
+#### 5.多表联查
 
 之前的操作都仅对于一个数据表Employees1，那么多表连接该怎么写list？比如下面这个SQL，在java中要怎么写。
 
@@ -1792,9 +1913,13 @@ List<Map<String,Object>> listAll(@Param("parse") Map<String,Object> parse);
 
 ![image-20240528172653830](SpringBootNote.assets/image-20240528172653830.png)
 
-然后和之前一样，在业务层创建方法。持久层处理客户端请求。
+然后和之前一样，在业务层创建方法。持久层处理客户端请求。使用 `@RequestParam` 时，Spring 会自动将所有的请求参数绑定到这个 `Map` 中，而无需明确地声明每个参数。这样的方法在处理动态参数或参数数量不确定的情况时非常方便。
 
+![image-20240529095324295](SpringBootNote.assets/image-20240529095324295.png)
 
+启动SpringBoot，网页打开[员工列表](http://localhost:8080/emps.html)。效果如下
+
+![image-20240529095626107](SpringBootNote.assets/image-20240529095626107.png)
 
 补充：前端接受参数的几种方式：
 
