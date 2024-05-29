@@ -1800,6 +1800,8 @@ delete语句的默认返回也是影响的行数，创建的方法和update一�
 
 #### html展示页面
 
+可到BootsTrap获取全局布局样式。我使用的是3：[全局 CSS 样式 · Bootstrap v3 中文文档 | Bootstrap 中文网 (bootcss.com)](https://v3.bootcss.com/css/)
+
 创建在了资源文件resources中的staic包下
 
 emps.html。
@@ -1909,7 +1911,7 @@ List<Map<String,Object>> listAll(@Param("parse") Map<String,Object> parse);
     </select>
 ```
 
-然后把联表查询SQL语句放进来，并进行一些改动，添加条件，这里稍微填写几个条件，比如根据姓名查询，部门名称查询 。
+然后把联表查询SQL语句放进来，并进行一些改动，添加条件，这里稍微填写几个条件，比如根据姓名查询，部门名称查询 。（ename这个字段可能会造成困惑，实际上获得的参数是从前端获取，比如输入框，是我们自己输入的查询条件，所以不需要指明数据字段为ename）
 
 ![image-20240528172653830](SpringBootNote.assets/image-20240528172653830.png)
 
@@ -1927,6 +1929,31 @@ List<Map<String,Object>> listAll(@Param("parse") Map<String,Object> parse);
 2. 设置属性：如 String name，name和表单中的元素name一致。
 3. 传递对象：对象中的属性名和表单中的元素的名称一样。（比如实体类Employees1）
 4. Map：多个对象时可使用，名称作为key，对应的属性值作为value。
+
+#### 6.创建添加员工页面
+
+利用MybatisX生成jobs和department1表的相关文件。
+
+![image-20240529150752460](SpringBootNote.assets/image-20240529150752460.png)
+
+为达成下拉列表功能，为Jobs和Department1创建list方法。
+
+相关的页面方法都可以到[全局 CSS 样式 · Bootstrap v3 中文文档 | Bootstrap 中文网 (bootcss.com)](https://v3.bootcss.com/css/)寻找，方便快速使用。
+
+创建添加员工页面，emp_add.html，通过遍历，将list方法查询到的数据呈现在下拉列表中
+
+```html
+$.getJSON('job/list',function (resp){
+            let str = `<option disabled selected>请选择</option>`;
+            $.each(resp.data,function (index,job){
+                str+=`<option value="${job.jobId}">${job.jobTitle}</option>`
+            })
+            $('#jobId').html(str);
+
+        })
+```
+
+
 
 # 疑问
 
