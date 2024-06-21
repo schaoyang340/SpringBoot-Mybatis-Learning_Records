@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sql.dao.JobsMapper">
+
+    <resultMap id="BaseResultMap" type="org.sql.domain.Jobs">
+            <id property="jobId" column="job_id" jdbcType="VARCHAR"/>
+            <result property="jobTitle" column="job_title" jdbcType="VARCHAR"/>
+            <result property="minSalary" column="min_salary" jdbcType="INTEGER"/>
+            <result property="maxSalary" column="max_salary" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        job_id,job_title,min_salary,
+        max_salary
+    </sql>
+
+    <select id="list" resultType="org.sql.domain.Jobs">
+        SELECT
+            job_id,
+            job_title,
+            min_salary,
+            max_salary
+        FROM jobs
+    </select>
+</mapper>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>员工列表</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <script src="./js/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+<div class="container">
+
+    <div>
+        <h3 class="text-center">员工列表</h3>
+    </div>
+    <div>
+        <a href="emp_add.html" class="btn btn-primary">添加员工</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>员工编号</th>
+            <th>姓名</th>
+            <th>手机号</th>
+            <th>职位</th>
+            <th>薪资</th>
+            <th>绩效</th>
+            <th>上司领导</th>
+            <th>部门编号</th>
+            <th>入职时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+
+    </table>
+</div>
+</body>
+
+<script>
+    $(function (){
+        listEmp();
+    })
+    function listEmp(){
+        $.get('employee/list',function (resp) {
+            let str = ``;
+            $.each(resp.data,function (index,emp) {
+                str+=` <tr>
+                        <td>${emp.employee_id}</td>
+                        <td>${emp.first_name+' '+emp.last_name}</td>
+                        <td>${emp.phone_number}</td>
+                        <td>${emp.job_title}</td>
+                        <td>${emp.salary}</td>
+                        <td>${checkUndefined(emp.commission_pct)}</td>
+                        <td>${checkUndefined(emp.manager_id)}</td>
+                        <td>${emp.department_name}</td>
+                        <td>${emp.hiredate}</td>
+                        <td>
+                            <button type="button" class="btn btn-link">编辑</button>
+                            <button type="button" onclick="delEmp(${emp.employeeId})" class="btn btn-link">删除</button>
+                        </td>
+                    </tr>`;
+            })
+            $('tbody').html(str);
+        })
+    }
+
+    function delEmp(id){
+        if(confirm('确认删除该用户信息吗？')){
+            $.get(`employee/del/${id}`,function (resp){
+                console.log(resp);
+                if (resp.code != 200){
+                    alert(resp.msg)
+                    return;
+                }
+                listEmp();
+            })
+        }
+    }
+
+    function checkUndefined(str){
+        if (str == undefined){
+            return ''
+        }
+        return str;
+    }
+</script>
+
+</html>

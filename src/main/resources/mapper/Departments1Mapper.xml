@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sql.dao.Departments1Mapper">
+
+    <resultMap id="BaseResultMap" type="org.sql.domain.Departments1">
+            <id property="departmentId" column="department_id" jdbcType="INTEGER"/>
+            <result property="departmentName" column="department_name" jdbcType="VARCHAR"/>
+            <result property="managerId" column="manager_id" jdbcType="INTEGER"/>
+            <result property="locationId" column="location_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        department_id,department_name,manager_id,
+        location_id
+    </sql>
+
+    <select id="list" resultType="org.sql.domain.Departments1">
+        SELECT
+            department_id,
+            department_name,
+            manager_id,
+            location_id
+        FROM departments1
+    </select>
+</mapper>
