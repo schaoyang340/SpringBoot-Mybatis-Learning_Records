@@ -71,7 +71,7 @@
         if(confirm('确认删除该用户信息吗？')){
             $.get(`employee/del/${id}`,function (resp){
                 console.log(resp);
-                if (resp.code != 200){
+                if (resp.code !== 200){
                     alert(resp.msg)
                     return;
                 }
@@ -81,7 +81,7 @@
     }
 
     function checkUndefined(str){
-        if (str == undefined){
+        if (str === undefined){
             return ''
         }
         return str;
