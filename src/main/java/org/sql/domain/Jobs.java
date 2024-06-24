@@ -1,13 +1,11 @@
 package org.sql.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
+import lombok.Getter;
+import lombok.Setter;
+
 
 import java.io.Serializable;
 
@@ -15,90 +13,60 @@ import java.io.Serializable;
  * 
  * @TableName jobs
  */
+@Setter
+@Getter
 @TableName(value ="jobs")
 public class Jobs implements Serializable {
     /**
-     * 
+     *
+     * -- GETTER --
+     * <p>
+     * -- SETTER --
+     *
+
+
      */
     @TableId(value = "job_id")
     private String jobId;
 
     /**
-     * 
+     *
+     * -- GETTER --
+     * <p>
+     * -- SETTER --
+     *
+
+
      */
     @TableField(value = "job_title")
     private String jobTitle;
 
     /**
-     * 
+     *
+     * -- GETTER --
+     * <p>
+     * -- SETTER --
+     *
+
+
      */
     @TableField(value = "min_salary")
     private Integer minSalary;
 
     /**
-     * 
+     *
+     * -- GETTER --
+     * <p>
+     * -- SETTER --
+     *
+
+
      */
     @TableField(value = "max_salary")
     private Integer maxSalary;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 
-     */
-    public String getJobId() {
-        return jobId;
-    }
-
-    /**
-     * 
-     */
-    public void setJobId(String jobId) {
-        this.jobId = jobId;
-    }
-
-    /**
-     * 
-     */
-    public String getJobTitle() {
-        return jobTitle;
-    }
-
-    /**
-     * 
-     */
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
-    }
-
-    /**
-     * 
-     */
-    public Integer getMinSalary() {
-        return minSalary;
-    }
-
-    /**
-     * 
-     */
-    public void setMinSalary(Integer minSalary) {
-        this.minSalary = minSalary;
-    }
-
-    /**
-     * 
-     */
-    public Integer getMaxSalary() {
-        return maxSalary;
-    }
-
-    /**
-     * 
-     */
-    public void setMaxSalary(Integer maxSalary) {
-        this.maxSalary = maxSalary;
-    }
 
     @Override
     public boolean equals(Object that) {
@@ -131,16 +99,14 @@ public class Jobs implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", jobId=").append(jobId);
-        sb.append(", jobTitle=").append(jobTitle);
-        sb.append(", minSalary=").append(minSalary);
-        sb.append(", maxSalary=").append(maxSalary);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return getClass().getSimpleName() +
+                " [" +
+                "Hash = " + hashCode() +
+                ", jobId=" + jobId +
+                ", jobTitle=" + jobTitle +
+                ", minSalary=" + minSalary +
+                ", maxSalary=" + maxSalary +
+                ", serialVersionUID=" + serialVersionUID +
+                "]";
     }
 }
